@@ -165,8 +165,21 @@ def preprocess_data(data):
             data[key] = str(value)  # Convert to JSON string representation
     return data
 
-    
+def format_chat_history(chat_history):
+    formatted_text = []
+    for entry in chat_history:
+        user_index = entry.get('userIndex')
+        text = entry.get('text')
+        formatted_text.append(f"userIndex: {user_index}, text: {text}")
+    return " | ".join(formatted_text)  # Concatenate with a separator like " | " if needed
+
+
+
 def save_data_to_postgres(data):
+    user_name = data.get('username')
+    chatHistory = format_chat_history(data.get('chatHistory'))
+    numUsers = data.get('numUsers')
+    selectedMemeIndex = data.get('selectedMemeIndex')
     try:
         # Add timestamp to the data
         #data['timestamp'] = datetime.now().isoformat()
@@ -181,10 +194,10 @@ def save_data_to_postgres(data):
             VALUES (%s, %s, %s, %s)
         '''
         cursor.execute(insert_query, (
-            data.get('username'),
-            data.get('chatHistory'),
-            data.get('numUsers'),
-            data.get('selectedMemeIndex')
+            user_name,
+            chatHistory,
+            numUsers,
+            selectedMemeIndex
         ))
 
 
