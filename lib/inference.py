@@ -10,8 +10,9 @@ import re
 from PIL import ImageFont
 
 
-something="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"
-client = OpenAI(api_key = something)
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+client = OpenAI(api_key=OPENAI_API_KEY)
+
 
 def analyze_conversation_to_meme(text):
     prompt = f"""
