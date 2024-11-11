@@ -152,7 +152,7 @@ def create_table():
 def save_data_to_postgres(data):
     try:
         # Add timestamp to the data
-        data['timestamp'] = datetime.now().isoformat()
+        #data['timestamp'] = datetime.now().isoformat()
 
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -160,16 +160,16 @@ def save_data_to_postgres(data):
 
         # Insert data into the table
         insert_query = '''
-            INSERT INTO chat_data (username, chat_history, num_users, selected_meme_index, timestamp)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO chat_data (username, chat_history, num_users, selected_meme_index)
+            VALUES (%s, %s, %s, %s)
         '''
         cursor.execute(insert_query, (
             data.get('username'),
             data.get('chatHistory'),
             data.get('numUsers'),
-            data.get('selectedMemeIndex'),
-            data['timestamp']
+            data.get('selectedMemeIndex')
         ))
+
 
         # Commit the transaction
         conn.commit()
