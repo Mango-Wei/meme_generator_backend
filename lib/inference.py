@@ -76,7 +76,7 @@ def analyze_conversation_to_meme(text):
         Return the answers in the exact format: 'Category: 1; Emotions: 2, 5; Template: 1'.
         """
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
     transition_analysis = response.choices[0].message.content
