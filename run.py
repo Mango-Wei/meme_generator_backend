@@ -5,6 +5,7 @@ import os
 from openai import OpenAI
 from lib import *
 import json  # Import the json module
+import pandas
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -122,21 +123,19 @@ loaded_model = joblib.load(model_path)
 OPENAI_API_KEY = "sk-svcacct-6_-0FGRKPlBXDasvJYP7xRoOuRmX4tvunOrRmSd38r034bZbZXDF8wAlfs9etrT3BlbkFJYnHH0Iv1TaI6W1-5mKDmC04pdqh6_SAhxlKErd1oAIh27jPmh4qYWTJgpMMHYA"
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def save_data_to_json(data):
-    # Load existing data
-    DATA_FILE_PATH = './saved_data/saved.json'
+def save_data_to_csv(data):
+    # Convert data to a DataFrame
+    DATA_FILE_PATH = './saved_data/chat_data.csv'
+
+    df = pd.DataFrame([data])
+
+    # Check if the CSV file exists
     if os.path.exists(DATA_FILE_PATH):
-        with open(DATA_FILE_PATH, 'r') as file:
-            saved_data = json.load(file)
+        # Append to existing CSV
+        df.to_csv(DATA_FILE_PATH, mode='a', header=False, index=False)
     else:
-        saved_data = []
-
-    # Append the new data
-    saved_data.append(data)
-
-    # Write back to the JSON file
-    with open(DATA_FILE_PATH, 'w') as file:
-        json.dump(saved_data, file, indent=4)
+        # Create new CSV with header
+        df.to_csv(DATA_FILE_PATH, mode='w', header=True, index=False)
 
 
 
@@ -241,7 +240,7 @@ def save_chat_data():
 
     # Append data to the JSON file
     try:
-        save_data_to_json(data)
+        save_data_to_csv(data)
         return jsonify({"status": "success", "message": "Data saved successfully"}), 200
     except Exception as e:
         app.logger.error(f"Failed to save data: {e}")
