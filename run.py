@@ -131,8 +131,13 @@ def generate_final_meme():
     cluster_number = meme_cluster_mapping.get(selected_meme, 1)  # Default cluster as 1 if not found
 
     # Generate responses for the meme based on chat history or other data
-    app.logger.info(f"chat history: {chat_string}")
-    meme_responses = fit_to_meme(chat_string, selected_meme, cluster_number)
+    chat_history = data['chat_history']
+    concatenated_chat = ", ".join(f"{entry['userIndex']}: {entry['text']}" for entry in chat_history)
+    
+
+    app.logger.info(f"chat history: {concatenated_chat}")
+    meme_responses = fit_to_meme(concatenated_chat, selected_meme, cluster_number)
+    
     proper_response = construct_and_manage_responses(meme_responses)
 
     # Open the template image
