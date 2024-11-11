@@ -7,6 +7,7 @@ from lib import *
 import json  # Import the json module
 import pandas
 from datetime import datetime
+import psycopg2
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
