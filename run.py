@@ -125,7 +125,7 @@ DATA_FILE_PATH = os.path.join(os.path.dirname(__file__), 'saved_data', 'chat_dat
 
 # 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
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 def save_data_to_csv(data):
