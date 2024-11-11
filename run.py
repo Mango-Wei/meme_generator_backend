@@ -4,6 +4,7 @@ import joblib
 import os
 from openai import OpenAI
 from lib import *
+import json  # Import the json module
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
