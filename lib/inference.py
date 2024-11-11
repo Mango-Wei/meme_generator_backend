@@ -10,7 +10,7 @@ import re
 from PIL import ImageFont
 
 
-something="sk-svcacct-6_-0FGRKPlBXDasvJYP7xRoOuRmX4tvunOrRmSd38r034bZbZXDF8wAlfs9etrT3BlbkFJYnHH0Iv1TaI6W1-5mKDmC04pdqh6_SAhxlKErd1oAIh27jPmh4qYWTJgpMMHYA"
+something="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"
 client = OpenAI(api_key = something)
 
 def analyze_conversation_to_meme(text):
@@ -76,7 +76,7 @@ def analyze_conversation_to_meme(text):
         Return the answers in the exact format: 'Category: 1; Emotions: 2, 5; Template: 1'.
         """
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
     )
     transition_analysis = response.choices[0].message.content
@@ -122,7 +122,7 @@ def fit_to_meme(text, template, cluster_number):
     Return the answers in the exact format and don't mention who is talking, remember the part number should match the {cluster_number}: Part1: ; Part2: ; ....
     """
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
     )
     transition_analysis = response.choices[0].message.content

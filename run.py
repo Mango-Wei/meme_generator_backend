@@ -120,30 +120,41 @@ chat_string = ''
 # Load your trained model
 model_path = 'best_random_forest_model.joblib'
 loaded_model = joblib.load(model_path)
-
+DATA_FILE_PATH = os.path.join(os.path.dirname(__file__), 'saved_data', 'chat_data.csv')
 # OpenAI setup
-OPENAI_API_KEY = "sk-svcacct-6_-0FGRKPlBXDasvJYP7xRoOuRmX4tvunOrRmSd38r034bZbZXDF8wAlfs9etrT3BlbkFJYnHH0Iv1TaI6W1-5mKDmC04pdqh6_SAhxlKErd1oAIh27jPmh4qYWTJgpMMHYA"
+
+# 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
+
+OPENAI_API_KEY = "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"
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 def save_data_to_csv(data):
-    DATA_FILE_PATH = './saved_data/chat_data.csv'
-    # Add a timestamp to the data
-    data['timestamp'] = datetime.now().isoformat()  # Format as ISO 8601 string
+    try:
+        # Add timestamp
+        data['timestamp'] = datetime.now().isoformat()
 
-    # Convert data to a DataFrame
-    new_data_df = pd.DataFrame([data])
+        # Convert to DataFrame
+        new_data_df = pd.DataFrame([data])
 
-    # Check if the CSV file exists
-    if os.path.exists(DATA_FILE_PATH):
-        # Load existing data and concatenate it with the new data
-        existing_data_df = pd.read_csv(DATA_FILE_PATH)
-        combined_df = pd.concat([existing_data_df, new_data_df], ignore_index=True)
-    else:
-        # If no existing data, just use the new data
-        combined_df = new_data_df
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(DATA_FILE_PATH), exist_ok=True)
 
-    # Save the concatenated DataFrame back to the CSV file
-    combined_df.to_csv(DATA_FILE_PATH, index=False)
+        # Check if the CSV exists and concatenate or create new
+        if os.path.exists(DATA_FILE_PATH):
+            # Load existing data and append new data
+            existing_data_df = pd.read_csv(DATA_FILE_PATH)
+            combined_df = pd.concat([existing_data_df, new_data_df], ignore_index=True)
+        else:
+            # No existing file, use new data
+            combined_df = new_data_df
+
+        # Write DataFrame to CSV
+        combined_df.to_csv(DATA_FILE_PATH, index=False)
+        print("Data successfully saved to CSV.")
+
+    except Exception as e:
+        print(f"Failed to save data to CSV: {e}")
+        
 # Define routes for interaction
 @app.route('/generate_meme_options', methods=['POST', 'OPTIONS'])
 def generate_meme_options():
@@ -240,6 +251,14 @@ def generate_final_meme():
 
 @app.route('/save_chat_data', methods=['POST'])
 def save_chat_data():
+
+    if request.method == 'OPTIONS':
+        response = jsonify({})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        return response, 200
+
     data = request.json  # Expecting a JSON payload from the client
     app.logger.info(f"Received data to save: {data}")
 
