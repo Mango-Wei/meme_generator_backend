@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import numpy as np
 import re
-something="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"
+something="sk-svcacct-6_-0FGRKPlBXDasvJYP7xRoOuRmX4tvunOrRmSd38r034bZbZXDF8wAlfs9etrT3BlbkFJYnHH0Iv1TaI6W1-5mKDmC04pdqh6_SAhxlKErd1oAIh27jPmh4qYWTJgpMMHYA"
 client = OpenAI(api_key = something)
 
 def analyze_conversation_to_meme(text):
