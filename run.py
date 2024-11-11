@@ -149,6 +149,41 @@ def create_table():
     cursor.close()
     conn.close()
 
+def save_data_to_postgres(data):
+    try:
+        # Add timestamp to the data
+        data['timestamp'] = datetime.now().isoformat()
+
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = conn.cursor()
+
+        # Insert data into the table
+        insert_query = '''
+            INSERT INTO chat_data (username, chat_history, num_users, selected_meme_index, timestamp)
+            VALUES (%s, %s, %s, %s, %s)
+        '''
+        cursor.execute(insert_query, (
+            data.get('username'),
+            data.get('chatHistory'),
+            data.get('numUsers'),
+            data.get('selectedMemeIndex'),
+            data['timestamp']
+        ))
+
+        # Commit the transaction
+        conn.commit()
+        print("Data successfully saved to PostgreSQL.")
+        
+        # Close the connection
+        cursor.close()
+        conn.close()
+
+    except Exception as e:
+        print(f"Failed to save data to PostgreSQL: {e}")
+        raise
+
+
 # Call the create_table function when the app starts to ensure the table exists
 create_table()
         
@@ -247,39 +282,26 @@ def generate_final_meme():
 
 
 @app.route('/save_chat_data', methods=['POST'])
-def save_data_to_postgres(data):
+def save_chat_data():
+    if request.method == 'OPTIONS':
+        response = jsonify({})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        return response, 200
+
+    data = request.json  # Expecting a JSON payload from the client
+    app.logger.info(f"Received data to save: {data}")
+
+    # Store data in PostgreSQL
     try:
-        # Add timestamp to the data
-        data['timestamp'] = datetime.now().isoformat()
-
-        # Connect to the PostgreSQL database
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = conn.cursor()
-
-        # Insert data into the table
-        insert_query = '''
-            INSERT INTO chat_data (username, chat_history, num_users, selected_meme_index, timestamp)
-            VALUES (%s, %s, %s, %s, %s)
-        '''
-        cursor.execute(insert_query, (
-            data.get('username'),
-            data.get('chatHistory'),
-            data.get('numUsers'),
-            data.get('selectedMemeIndex'),
-            data['timestamp']
-        ))
-
-        # Commit the transaction
-        conn.commit()
-        print("Data successfully saved to PostgreSQL.")
-        
-        # Close the connection
-        cursor.close()
-        conn.close()
-
+        save_data_to_postgres(data)
+        return jsonify({"status": "success", "message": "Data saved successfully"}), 200
     except Exception as e:
-        print(f"Failed to save data to PostgreSQL: {e}")
-        raise
+        app.logger.error(f"Failed to save data: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
 
 
 
