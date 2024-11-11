@@ -6,6 +6,8 @@ from openai import OpenAI
 from lib import *
 import json  # Import the json module
 import pandas
+from datetime import datetime
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -124,21 +126,24 @@ OPENAI_API_KEY = "sk-svcacct-6_-0FGRKPlBXDasvJYP7xRoOuRmX4tvunOrRmSd38r034bZbZXD
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 def save_data_to_csv(data):
-    # Convert data to a DataFrame
     DATA_FILE_PATH = './saved_data/chat_data.csv'
+    # Add a timestamp to the data
+    data['timestamp'] = datetime.now().isoformat()  # Format as ISO 8601 string
 
-    df = pd.DataFrame([data])
+    # Convert data to a DataFrame
+    new_data_df = pd.DataFrame([data])
 
     # Check if the CSV file exists
     if os.path.exists(DATA_FILE_PATH):
-        # Append to existing CSV
-        df.to_csv(DATA_FILE_PATH, mode='a', header=False, index=False)
+        # Load existing data and concatenate it with the new data
+        existing_data_df = pd.read_csv(DATA_FILE_PATH)
+        combined_df = pd.concat([existing_data_df, new_data_df], ignore_index=True)
     else:
-        # Create new CSV with header
-        df.to_csv(DATA_FILE_PATH, mode='w', header=True, index=False)
+        # If no existing data, just use the new data
+        combined_df = new_data_df
 
-
-
+    # Save the concatenated DataFrame back to the CSV file
+    combined_df.to_csv(DATA_FILE_PATH, index=False)
 # Define routes for interaction
 @app.route('/generate_meme_options', methods=['POST', 'OPTIONS'])
 def generate_meme_options():
