@@ -7,6 +7,9 @@ import os
 import pandas as pd
 import numpy as np
 import re
+from PIL import ImageFont
+
+
 something="sk-svcacct-6_-0FGRKPlBXDasvJYP7xRoOuRmX4tvunOrRmSd38r034bZbZXDF8wAlfs9etrT3BlbkFJYnHH0Iv1TaI6W1-5mKDmC04pdqh6_SAhxlKErd1oAIh27jPmh4qYWTJgpMMHYA"
 client = OpenAI(api_key = something)
 
@@ -192,7 +195,7 @@ def adjust_font_size(text, max_width, max_height, start_size=60):
     - ImageFont.FreeTypeFont object with the adjusted font size.
     """
     font_size = start_size
-    font = ImageFont.truetype("arial.ttf", font_size)  # Use a scalable font, e.g., Arial
+    font = ImageFont.load_default()
     
     while font.getbbox(text)[2] > max_width or font.getbbox(text)[3] * len(text.split()) > max_height:
         font_size -= 1
