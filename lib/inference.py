@@ -37,20 +37,38 @@ def analyze_conversation_to_meme(text):
         10. Mock Pride/Confidence
 
         3. Which meme template suit it the most?
-        1.'Batman-Slapping-Robin',
-        2.'Bike-Fall',
-        3.'Buff-Doge-vs-Cheems',
-        4.'Clown-Applying-Makeup',
-        5.'Distracted-Boyfriend',
-        6.'Drake',
-        7.'Hide-the-Pain-Harold',
-        8.'Monkey-Puppet',
-        9.'One-Does-Not-Simply',
-        10.'Running-Away-Balloon',
-        11.'Sleeping-Shaq',
-        12.'Whisper-and-Goosebumps'
 
-        
+        1: 'Batman-Slapping-Robin',
+        2: 'Bike-Fall',
+        3: 'Buff-Doge-vs-Cheems',
+        4: 'Clown-Applying-Makeup',
+        5: 'Distracted-Boyfriend',
+        6: 'Drake',
+        7: 'Hide-the-Pain-Harold',
+        8: 'Monkey-Puppet',
+        9: 'One-Does-Not-Simply',
+        10: 'Running-Away-Balloon',
+        11: 'Sleeping-Shaq',
+        12: 'Whisper-and-Goosebumps',
+        13: 'Anakin-Padme-4-Panel',
+        14: 'Bernie-I-Am-Once-Again-Asking-For-Your-Support',
+        15: 'Boardroom-Meeting-Suggestion',
+        16: 'Expanding-Brain',
+        17: 'Guess-Ill-die',
+        18: 'I-Bet-Hes-Thinking-About-Other-Women',
+        19: 'Is-This-A-Pigeon',
+        20: 'Laughing-Leo',
+        21: 'Leonardo-Dicaprio-Cheers',
+        22: 'Roll-Safe-Think-About-It',
+        23: 'Sad-Pablo-Escobar',
+        24: 'Success-Kid',
+        25: 'Surprised-Pikachu',
+        26: 'The-Rock-Driving',
+        27: 'This-Is-Fine',
+        28: 'Tuxedo-Winnie-The-Pooh',
+        29: 'Two-Buttons',
+        30: 'Waiting-Skeleton',
+        31: 'Woman-Yelling-At-Cat'
         
         Conversation:
         {text}

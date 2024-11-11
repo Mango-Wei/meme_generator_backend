@@ -19,7 +19,26 @@ template_mapping = {
         9: 'One-Does-Not-Simply',
         10: 'Running-Away-Balloon',
         11: 'Sleeping-Shaq',
-        12: 'Whisper-and-Goosebumps'
+        12: 'Whisper-and-Goosebumps',
+        13: 'Anakin-Padme-4-Panel',
+        14: 'Bernie-I-Am-Once-Again-Asking-For-Your-Support',
+        15: 'Boardroom-Meeting-Suggestion',
+        16: 'Expanding-Brain',
+        17: 'Guess-Ill-die',
+        18: 'I-Bet-Hes-Thinking-About-Other-Women',
+        19: 'Is-This-A-Pigeon',
+        20: 'Laughing-Leo',
+        21: 'Leonardo-Dicaprio-Cheers',
+        22: 'Roll-Safe-Think-About-It',
+        23: 'Sad-Pablo-Escobar',
+        24: 'Success-Kid',
+        25: 'Surprised-Pikachu',
+        26: 'The-Rock-Driving',
+        27: 'This-Is-Fine',
+        28: 'Tuxedo-Winnie-The-Pooh',
+        29: 'Two-Buttons',
+        30: 'Waiting-Skeleton',
+        31: 'Woman-Yelling-At-Cat'
 }
 
 meme_location_mapping = {
@@ -34,7 +53,26 @@ meme_location_mapping = {
         'One-Does-Not-Simply': [[[83,11],[570,92]],[[138,240],[538,357]]],
         'Running-Away-Balloon': [[[331,46],[484,203]],[[7,399],[116,652]], [[202,424],[317,640]], [[390,386],[484,506]]],
         'Sleeping-Shaq': [[[9,6],[242,241]],[[17,24],[238,483]]],
-        'Whisper-and-Goosebumps': [[[67,82],[560,286]]]
+        'Whisper-and-Goosebumps': [[[67,82],[560,286]]],
+        'Anakin-Padme-4-Panel':[[[5, 220], [365,368]], [[436,227],[742,364]], [[17,521], [366,728]], [[454, 571], [691, 710]]],
+        'Bernie-I-Am-Once-Again-Asking-For-Your-Support': [[[164,655], [601,721]]],
+        'Boardroom-Meeting-Suggestion':[[[154, 8], [440, 41]], [[30,248], [116,269]], [[164, 256], [240, 275]]],
+        'Expanding-Brain': [[[9,11],[408,280]],[[18,326],[395,573]], [[5,620], [412, 857]], [[11,911], [404,1178]]],
+        'Guess-Ill-die': [[[12,8], [376,124]], [[49,224],[343,292]]],
+        'I-Bet-Hes-Thinking-About-Other-Women': [[[52, 118], [773,414]],[[835,220],[1649,605]]],
+        'Is-This-A-Pigeon': [[[34,330],[708,774]],[[929,229],[1576,597]],[[122,949], [1504, 1275]]],
+        'Laughing-Leo': [[[32,11],[443,174]], [[13,342], [450,445]]],
+        'Leonardo-Dicaprio-Cheers': [[[20,9],[590,107]],[[12,286],[587,379]]],
+        'Roll-Safe-Think-About-It': [[[23,10], [686,135]], [[43,275], [651, 374]]],
+        'Sad-Pablo-Escobar': [[[56,11],[654,300]],[[26,438], [341,603]], [[377,461], [694,637]]],
+        'Success-Kid': [[[19,9],[492, 165]], [[17,355], [483, 477]]],
+        'Surprised-Pikachu': [[[24,25],[1864,728]]],
+        'The-Rock-Driving': [[[331, 35],[549,139]], [[334,265], [556,362]]],
+        'This-Is-Fine': [[[15, 14], [278,103]]],
+        'Tuxedo-Winnie-The-Pooh': [[[350,4],[791,286]], [[351, 301], [791,566]]],
+        'Two-Buttons': [[[37,92], [273, 170]], [[266,65], [432, 116]], [[86,734], [553, 839]]],
+        'Waiting-Skeleton':[[[13, 5], [294, 109]], [[9, 275], [294, 365]]],
+        'Woman-Yelling-At-Cat': [[[1, 1], [322,85]], [[350, 4], [670,90]]]
 }
 
 meme_cluster_mapping = {
@@ -49,7 +87,26 @@ meme_cluster_mapping = {
         'One-Does-Not-Simply': 2,
         'Running-Away-Balloon': 4,
         'Sleeping-Shaq': 2,
-        'Whisper-and-Goosebumps': 1
+        'Whisper-and-Goosebumps': 1,
+        'Anakin-Padme-4-Panel': 4,
+        'Bernie-I-Am-Once-Again-Asking-For-Your-Support': 1,
+        'Boardroom-Meeting-Suggestion': 4,
+        'Expanding-Brain': 4,
+        'Guess-Ill-die': 2,
+        'I-Bet-Hes-Thinking-About-Other-Women': 2,
+        'Is-This-A-Pigeon': 3,
+        'Laughing-Leo': 2,
+        'Leonardo-Dicaprio-Cheers': 2,
+        'Roll-Safe-Think-About-It': 2,
+        'Sad-Pablo-Escobar': 3,
+        'Success-Kid': 2,
+        'Surprised-Pikachu': 1,
+        'The-Rock-Driving': 2,
+        'This-Is-Fine': 1,
+        'Tuxedo-Winnie-The-Pooh': 2,
+        'Two-Buttons': 2,
+        'Waiting-Skeleton': 2,
+        'Woman-Yelling-At-Cat': 2
 }
 
 chat_string = ''
@@ -63,6 +120,24 @@ loaded_model = joblib.load(model_path)
 # OpenAI setup
 OPENAI_API_KEY = "sk-svcacct-6_-0FGRKPlBXDasvJYP7xRoOuRmX4tvunOrRmSd38r034bZbZXDF8wAlfs9etrT3BlbkFJYnHH0Iv1TaI6W1-5mKDmC04pdqh6_SAhxlKErd1oAIh27jPmh4qYWTJgpMMHYA"
 client = OpenAI(api_key=OPENAI_API_KEY)
+
+def save_data_to_json(data):
+    # Load existing data
+    DATA_FILE_PATH = './saved_data/saved.json'
+    if os.path.exists(DATA_FILE_PATH):
+        with open(DATA_FILE_PATH, 'r') as file:
+            saved_data = json.load(file)
+    else:
+        saved_data = []
+
+    # Append the new data
+    saved_data.append(data)
+
+    # Write back to the JSON file
+    with open(DATA_FILE_PATH, 'w') as file:
+        json.dump(saved_data, file, indent=4)
+
+
 
 # Define routes for interaction
 @app.route('/generate_meme_options', methods=['POST', 'OPTIONS'])
@@ -155,6 +230,24 @@ def generate_final_meme():
 
     # Return the path to the generated meme
     return send_file(output_file_path, mimetype='image/jpeg')
+
+
+
+@app.route('/save_chat_data', methods=['POST'])
+def save_chat_data():
+    data = request.json  # Expecting a JSON payload from the client
+    app.logger.info(f"Received data to save: {data}")
+
+    # Append data to the JSON file
+    try:
+        save_data_to_json(data)
+        return jsonify({"status": "success", "message": "Data saved successfully"}), 200
+    except Exception as e:
+        app.logger.error(f"Failed to save data: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
 
 
 if __name__ == '__main__':
