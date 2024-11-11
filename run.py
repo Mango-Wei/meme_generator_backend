@@ -120,7 +120,7 @@ chat_string = ''
 # Load your trained model
 model_path = 'best_random_forest_model.joblib'
 loaded_model = joblib.load(model_path)
-DATA_FILE_PATH = os.path.join(os.path.dirname(__file__), 'saved_data', 'chat_data.csv')
+#DATA_FILE_PATH = os.path.join(os.path.dirname(__file__), 'saved_data', 'chat_data.csv')
 # OpenAI setup
 
 # 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
@@ -128,32 +128,28 @@ DATA_FILE_PATH = os.path.join(os.path.dirname(__file__), 'saved_data', 'chat_dat
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def save_data_to_csv(data):
-    try:
-        # Add timestamp
-        data['timestamp'] = datetime.now().isoformat()
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-        # Convert to DataFrame
-        new_data_df = pd.DataFrame([data])
+# Function to connect to the database and create the table if it doesn’t exist
+def create_table():
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS chat_data (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(255),
+            chat_history TEXT,
+            num_users INTEGER,
+            selected_meme_index INTEGER,
+            timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    cursor.close()
+    conn.close()
 
-        # Ensure the directory exists
-        os.makedirs(os.path.dirname(DATA_FILE_PATH), exist_ok=True)
-
-        # Check if the CSV exists and concatenate or create new
-        if os.path.exists(DATA_FILE_PATH):
-            # Load existing data and append new data
-            existing_data_df = pd.read_csv(DATA_FILE_PATH)
-            combined_df = pd.concat([existing_data_df, new_data_df], ignore_index=True)
-        else:
-            # No existing file, use new data
-            combined_df = new_data_df
-
-        # Write DataFrame to CSV
-        combined_df.to_csv(DATA_FILE_PATH, index=False)
-        print("Data successfully saved to CSV.")
-
-    except Exception as e:
-        print(f"Failed to save data to CSV: {e}")
+# Call the create_table function when the app starts to ensure the table exists
+create_table()
         
 # Define routes for interaction
 @app.route('/generate_meme_options', methods=['POST', 'OPTIONS'])
@@ -250,26 +246,39 @@ def generate_final_meme():
 
 
 @app.route('/save_chat_data', methods=['POST'])
-def save_chat_data():
-
-    if request.method == 'OPTIONS':
-        response = jsonify({})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
-        return response, 200
-
-    data = request.json  # Expecting a JSON payload from the client
-    app.logger.info(f"Received data to save: {data}")
-
-    # Append data to the JSON file
+def save_data_to_postgres(data):
     try:
-        save_data_to_csv(data)
-        return jsonify({"status": "success", "message": "Data saved successfully"}), 200
-    except Exception as e:
-        app.logger.error(f"Failed to save data: {e}")
-        return jsonify({"status": "error", "message": str(e)}), 500
+        # Add timestamp to the data
+        data['timestamp'] = datetime.now().isoformat()
 
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = conn.cursor()
+
+        # Insert data into the table
+        insert_query = '''
+            INSERT INTO chat_data (username, chat_history, num_users, selected_meme_index, timestamp)
+            VALUES (%s, %s, %s, %s, %s)
+        '''
+        cursor.execute(insert_query, (
+            data.get('username'),
+            data.get('chatHistory'),
+            data.get('numUsers'),
+            data.get('selectedMemeIndex'),
+            data['timestamp']
+        ))
+
+        # Commit the transaction
+        conn.commit()
+        print("Data successfully saved to PostgreSQL.")
+        
+        # Close the connection
+        cursor.close()
+        conn.close()
+
+    except Exception as e:
+        print(f"Failed to save data to PostgreSQL: {e}")
+        raise
 
 
 
