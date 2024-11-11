@@ -149,6 +149,23 @@ def create_table():
     cursor.close()
     conn.close()
 
+def validate_data(data):
+    required_fields = ['username', 'chatHistory', 'numUsers', 'selectedMemeIndex']
+    for field in required_fields:
+        if field not in data:
+            raise ValueError(f"Missing field: {field}")
+        if field in ['numUsers', 'selectedMemeIndex'] and not isinstance(data[field], int):
+            raise ValueError(f"{field} must be an integer")
+
+
+def preprocess_data(data):
+    # Convert any nested dicts or lists to strings
+    for key, value in data.items():
+        if isinstance(value, (dict, list)):
+            data[key] = str(value)  # Convert to JSON string representation
+    return data
+
+    
 def save_data_to_postgres(data):
     try:
         # Add timestamp to the data
@@ -293,10 +310,18 @@ def save_chat_data():
     data = request.json  # Expecting a JSON payload from the client
     app.logger.info(f"Received data to save: {data}")
 
+    # Print data structure for debugging
+    print("Data received:", data)
+    print("Data type:", type(data))
+
     # Store data in PostgreSQL
     try:
+        validate_data(data)  # Validate input data
         save_data_to_postgres(data)
         return jsonify({"status": "success", "message": "Data saved successfully"}), 200
+    except ValueError as ve:
+        app.logger.error(f"Validation error: {ve}")
+        return jsonify({"status": "error", "message": str(ve)}), 400
     except Exception as e:
         app.logger.error(f"Failed to save data: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
