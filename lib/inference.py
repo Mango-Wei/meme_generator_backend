@@ -10,7 +10,7 @@ import re
 from PIL import ImageFont
 
 
-something="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"
+something="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"
 client = OpenAI(api_key = something)
 
 def analyze_conversation_to_meme(text):
