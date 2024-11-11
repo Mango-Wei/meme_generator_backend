@@ -195,11 +195,12 @@ def adjust_font_size(text, max_width, max_height, start_size=60):
     - ImageFont.FreeTypeFont object with the adjusted font size.
     """
     font_size = start_size
-    font = ImageFont.load_default()
+    font_path = './Arial.ttf'
+    font = ImageFont.truetype(font_path, font_size)
     
     while font.getbbox(text)[2] > max_width or font.getbbox(text)[3] * len(text.split()) > max_height:
         font_size -= 1
-        font = ImageFont.truetype("arial.ttf", font_size)
+        font = ImageFont.truetype("./Arial.ttf", font_size)
         if font_size < 10:  # Break if the font gets too small
             break
             
