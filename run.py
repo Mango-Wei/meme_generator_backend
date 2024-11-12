@@ -8,6 +8,7 @@ import json  # Import the json module
 import pandas
 from datetime import datetime
 import psycopg2
+import random
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -243,10 +244,19 @@ def generate_meme_options():
     top_2_results = [(proba[idx], loaded_model.classes_[idx]) for proba in probabilities for idx in np.argsort(proba)[-2:][::-1]]
     first_template = top_2_results[0][1]
     first_template = str(first_template)
-    second_template = top_2_results[1][1]
-    second_template = str(second_template)
+    # second_template = top_2_results[1][1]
+    # second_template = str(second_template)
     third_template = template_mapping[template]
+
+    
+
     third_template = str(third_template)
+
+    excluted_templates = {first_template, third_template}
+    
+    random_templates = [key for key in template_mapping.keys() if key not in excluded_templates]
+    random_template = random.choice(available_templates)
+    second_template = str(template_mapping[random_template])
     # Example response with meme options
 
     app.logger.info(f"GPT responses: {gpt_response}")
