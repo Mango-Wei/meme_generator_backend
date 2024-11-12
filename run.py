@@ -252,7 +252,7 @@ def generate_meme_options():
 
     third_template = str(third_template)
 
-    excluted_templates = {first_template, third_template}
+    excluded_templates = {first_template, third_template}
     
     random_templates = [key for key in template_mapping.keys() if key not in excluded_templates]
     random_template = random.choice(available_templates)
