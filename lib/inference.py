@@ -220,29 +220,51 @@ def add_text_to_meme(image_path, template_name, texts):
 
     return img
 
-def adjust_font_size(text, max_width, max_height, start_size=60):
+def adjust_font_size(text, max_width, max_height, initial_size=30):
     """
-    Adjusts font size to fit the text within the specified width and height.
+    Dynamically adjusts font size to fit the text within the specified width and height, 
+    allowing the font to either shrink or expand as needed.
     
     Parameters:
     - text (str): Text to fit within the bounding box.
     - max_width (int): Maximum width of the bounding box.
     - max_height (int): Maximum height of the bounding box.
-    - start_size (int): Starting font size.
+    - initial_size (int): Initial font size to start with.
     
     Returns:
     - ImageFont.FreeTypeFont object with the adjusted font size.
     """
-    font_size = start_size
     font_path = './Arial.ttf'
+    font_size = initial_size
     font = ImageFont.truetype(font_path, font_size)
     
-    while font.getbbox(text)[2] > max_width or font.getbbox(text)[3] * len(text.split()) > max_height:
-        font_size -= 1
-        font = ImageFont.truetype("./Arial.ttf", font_size)
-        if font_size < 10:  # Break if the font gets too small
+    # Get bounding box height for a single line (used for multi-line adjustments)
+    single_line_height = font.getbbox('A')[3]
+
+    # Increase font size if text is smaller than bounding box
+    while True:
+        # Calculate the width and height of the text block
+        text_width = font.getbbox(text)[2]
+        text_height = single_line_height * len(text.split('\n'))
+
+        # Check if the text fits within the bounding box
+        if text_width <= max_width and text_height <= max_height:
+            # Try a larger font size if there is space
+            font_size += 1
+            font = ImageFont.truetype(font_path, font_size)
+        else:
+            # Step back one size if it exceeds the bounding box
+            font_size -= 1
+            font = ImageFont.truetype(font_path, font_size)
             break
-            
+
+    # Shrink font size if the text exceeds the bounding box from the start
+    while font_size > 10 and (text_width > max_width or text_height > max_height):
+        font_size -= 1
+        font = ImageFont.truetype(font_path, font_size)
+        text_width = font.getbbox(text)[2]
+        text_height = single_line_height * len(text.split('\n'))
+
     return font
 
 
