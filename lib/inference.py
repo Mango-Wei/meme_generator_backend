@@ -236,29 +236,12 @@ def adjust_font_size(text, max_width, max_height, start_size=60):
     font_size = start_size
     font_path = './Arial.ttf'
     font = ImageFont.truetype(font_path, font_size)
-    single_line_height = font.getbbox('A')[3]
-    while True:
-        # Calculate the width and height of the text block
-        text_width = font.getbbox(text)[2]
-        text_height = single_line_height * len(text.split('\n'))
-
-        # Check if the text fits within the bounding box
-        if text_width <= max_width and text_height <= max_height:
-            # Try a larger font size if there is space
-            font_size += 1
-            font = ImageFont.truetype(font_path, font_size)
-        else:
-            # Step back one size if it exceeds the bounding box
-            font_size -= 1
-            font = ImageFont.truetype(font_path, font_size)
-            break
-
-    # Shrink font size if the text exceeds the bounding box from the start
-    while font_size > 10 and (text_width > max_width or text_height > max_height):
+    
+    while font.getbbox(text)[2] > max_width or font.getbbox(text)[3] * len(text.split()) > max_height:
         font_size -= 1
-        font = ImageFont.truetype(font_path, font_size)
-        text_width = font.getbbox(text)[2]
-        text_height = single_line_height * len(text.split('\n'))
+        font = ImageFont.truetype("./Arial.ttf", font_size)
+        if font_size < 18:  # Break if the font gets too small
+            break
             
     return font
 
