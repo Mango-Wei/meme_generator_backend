@@ -209,13 +209,17 @@ def add_text_to_meme(image_path, template_name, texts):
             
             # Wrap text based on the bounding box width and height
             wrapped_text = wrap_text_to_box(text, font, max_width, max_height)
+            cropped_area = img.crop((x1, y1, x2, y2))
+            bg_color = detect_background_color(cropped_area)
+
+            text_color = "white" if is_dark_color(bg_color) else "black"
 
             # Draw the text, centered vertically and horizontally within the box
             text_y = y1 + (max_height - len(wrapped_text) * font.getbbox(' ')[3]) // 2
             for line in wrapped_text:
                 text_width = font.getbbox(line)[2] - font.getbbox(line)[0]
                 text_x = x1 + (max_width - text_width) // 2
-                draw.text((text_x, text_y), line, fill="black", font=font)
+                draw.text((text_x, text_y), line, fill=text_color, font=font)
                 text_y += font.getbbox(' ')[3]
 
     return img
@@ -285,5 +289,30 @@ def wrap_text_to_box(text, font, max_width, max_height):
     return lines[:max_lines]
 
 
+def detect_background_color(cropped_area):
+    """
+    Determines the dominant color in the given area.
+    
+    Parameters:
+    - cropped_area (Image): Cropped image of the area to analyze.
+    
+    Returns:
+    - Tuple representing the RGB color of the dominant background color.
+    """
+    stat = ImageStat.Stat(cropped_area)
+    return stat.mean[:3]  # Get the average color as a tuple (R, G, B)
 
+def is_dark_color(color):
+    """
+    Determines if a color is dark or light based on luminance.
+    
+    Parameters:
+    - color (tuple): RGB color.
+    
+    Returns:
+    - Boolean indicating if the color is dark.
+    """
+    r, g, b = color
+    luminance = 0.299 * r + 0.587 * g + 0.114 * b  # Calculate luminance
+    return luminance < 128  # Return True if dark, False if light
 
