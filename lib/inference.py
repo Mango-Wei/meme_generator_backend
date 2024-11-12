@@ -75,6 +75,8 @@ def analyze_conversation_to_meme(text):
         Conversation:
         {text}
         
+        if the text is too short to interpret, please fill it out based on your own understanding so it is understandable
+        
         Return the answers in the exact format: 'Category: 1; Emotions: 2, 5; Template: 1'.
         """
     response = client.chat.completions.create(
