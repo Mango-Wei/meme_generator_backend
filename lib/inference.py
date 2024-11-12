@@ -220,28 +220,23 @@ def add_text_to_meme(image_path, template_name, texts):
 
     return img
 
-def adjust_font_size(text, max_width, max_height, initial_size=30):
+def adjust_font_size(text, max_width, max_height, start_size=60):
     """
-    Dynamically adjusts font size to fit the text within the specified width and height, 
-    allowing the font to either shrink or expand as needed.
+    Adjusts font size to fit the text within the specified width and height.
     
     Parameters:
     - text (str): Text to fit within the bounding box.
     - max_width (int): Maximum width of the bounding box.
     - max_height (int): Maximum height of the bounding box.
-    - initial_size (int): Initial font size to start with.
+    - start_size (int): Starting font size.
     
     Returns:
     - ImageFont.FreeTypeFont object with the adjusted font size.
     """
+    font_size = start_size
     font_path = './Arial.ttf'
-    font_size = initial_size
     font = ImageFont.truetype(font_path, font_size)
     
-    # Get bounding box height for a single line (used for multi-line adjustments)
-    single_line_height = font.getbbox('A')[3]
-
-    # Increase font size if text is smaller than bounding box
     while True:
         # Calculate the width and height of the text block
         text_width = font.getbbox(text)[2]
@@ -264,7 +259,7 @@ def adjust_font_size(text, max_width, max_height, initial_size=30):
         font = ImageFont.truetype(font_path, font_size)
         text_width = font.getbbox(text)[2]
         text_height = single_line_height * len(text.split('\n'))
-
+            
     return font
 
 
