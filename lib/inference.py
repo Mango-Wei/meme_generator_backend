@@ -236,7 +236,7 @@ def adjust_font_size(text, max_width, max_height, start_size=60):
     font_size = start_size
     font_path = './Arial.ttf'
     font = ImageFont.truetype(font_path, font_size)
-    
+    single_line_height = font.getbbox('A')[3]
     while True:
         # Calculate the width and height of the text block
         text_width = font.getbbox(text)[2]
