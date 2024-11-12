@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import numpy as np
 import re
-from PIL import ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageStat
 
 
 
