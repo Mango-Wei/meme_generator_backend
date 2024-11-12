@@ -255,8 +255,8 @@ def generate_meme_options():
     excluded_templates = {first_template, third_template}
     
     random_templates = [key for key in template_mapping.keys() if key not in excluded_templates]
-    random_template = random.choice(available_templates)
-    second_template = str(template_mapping[random_template])
+    random_template = random.choice(random_templates)
+    second_template = str(random_template)
     # Example response with meme options
 
     app.logger.info(f"GPT responses: {gpt_response}")
