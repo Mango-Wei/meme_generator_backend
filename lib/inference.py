@@ -113,22 +113,22 @@ def construct_responses(response):
     
 def fit_to_meme(text, template, cluster_number):
     prompt = f"""
-    1. Make the following conversation several very very very short meme style parts that can be suitable for meme:
-    Conversation:
-    {text}
-    Meme template:
-    {template}
-    How many parts:
-    {cluster_number}
-    
-    Return the answers in the exact format and don't mention who is talking, remember the part number should match the {cluster_number}: Part1: ; Part2: ; ....
-    """
+        Convert the following conversation into {cluster_number} concise, meme-style parts, each suitable as a standalone caption. 
+        - Conversation: {text}
+        - Meme template: {template}
+        
+        Format each part exactly as shown below, and ensure each is brief and in a meme-friendly style. Do not attribute dialogue to specific speakers.
+
+        Expected format:
+        Part1: text; Part2: text; ... up to Part{cluster_number}
+        """
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
     )
     transition_analysis = response.choices[0].message.content
     return transition_analysis
+
 
 def construct_and_manage_responses(responses):
     response_list = responses.split('\n')
