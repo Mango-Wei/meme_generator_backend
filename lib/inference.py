@@ -66,7 +66,6 @@ def analyze_conversation_to_meme(text):
         24: 'Success-Kid',
         25: 'Surprised-Pikachu',
         26: 'The-Rock-Driving',
-        27: 'This-Is-Fine',
         28: 'Tuxedo-Winnie-The-Pooh',
         29: 'Two-Buttons',
         30: 'Waiting-Skeleton',
@@ -76,7 +75,7 @@ def analyze_conversation_to_meme(text):
         {text}
         
         if the text is too short to interpret, please fill it out based on your own understanding so it is understandable
-        
+
         Return the answers in the exact format: 'Category: 1; Emotions: 2, 5; Template: 1'.
         """
     response = client.chat.completions.create(
