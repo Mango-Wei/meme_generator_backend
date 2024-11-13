@@ -244,9 +244,9 @@ def generate_meme_options():
     first_template = top_2_results[0][1]
     first_template = str(first_template)
 
-    if first_template == 'This-Is-Fine':
-        first_template = top_2_results[1][1]
-        first_template = str(first_template)
+    # if first_template == 'This-Is-Fine':
+    #     first_template = top_2_results[1][1]
+    #     first_template = str(first_template)
 
     third_template = template_mapping[template]
     third_template = str(third_template)
